@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.png" alt="GhostFree logo" width="400" />
+  <img src="https://raw.githubusercontent.com/shane-js/ghostfree/main/logo.png" alt="GhostFree logo" width="400" />
 </p>
 
 # What is GhostFree 🚫👻?

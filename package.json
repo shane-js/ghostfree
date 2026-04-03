@@ -1,6 +1,6 @@
 {
   "name": "ghostfree",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP server that scans your repo's dependencies for security vulnerabilities based on published CVEs.",
   "type": "module",
   "bin": {
@@ -42,5 +42,14 @@
     "osv",
     "vulnerability"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "author": "Shane Hughes",
+  "homepage": "https://github.com/shane-js/ghostfree#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shane-js/ghostfree.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shane-js/ghostfree/issues"
+  }
 }
