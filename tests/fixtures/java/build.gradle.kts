@@ -1,0 +1,30 @@
+plugins {
+    id("java")
+    id("org.springframework.boot") version "3.1.3"
+}
+
+group = "com.example"
+version = "0.0.1-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("com.google.guava:guava:32.1.2-jre")
+    implementation("org.apache.commons:commons-lang3:3.12.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
+    runtimeOnly("org.postgresql:postgresql:42.6.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testImplementation("org.mockito:mockito-core:5.4.0")
+    // vrc-exact + vrc-prerelease
+    implementation("com.example:snapshot-lib:1.0.0-SNAPSHOT")
+    // vrc-inclusive-range
+    implementation("com.example:interval-lib:[1.0,2.0)")
+    // vrc-exclusive-range
+    implementation("com.example:exclusive-lower:(4.1.3,)")
+    // vrc-upper-bound-only
+    implementation("com.example:upper-only:[,1.0]")
+    // vrc-exclusive-range
+    implementation("com.example:exclusive-both:(1.0,2.0)")
+}

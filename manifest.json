@@ -1,0 +1,90 @@
+{
+  "manifest_version": "0.3",
+  "name": "ghostfree",
+  "display_name": "GhostFree",
+  "version": "0.1.0",
+  "description": "MCP server that scans your repo's dependencies for security vulnerabilities based on published CVEs.",
+  "long_description": "GhostFree is a local MCP server that scans your repository's dependencies for known vulnerabilities using OSV.dev, helps you triage and fix findings with NVD and CISA KEV enrichment, and lets you manage accepted risks — all directly from your AI coding assistant.\n\nNo installation, signup, or payment required. Run GhostFree via `npx`.",
+  "author": {
+    "name": "Shane Hughes",
+    "url": "https://github.com/shane-js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shane-js/ghostfree.git"
+  },
+  "homepage": "https://github.com/shane-js/ghostfree",
+  "documentation": "https://github.com/shane-js/ghostfree#readme",
+  "support": "https://github.com/shane-js/ghostfree/issues",
+  "license": "MIT",
+  "logo": "logo.png",
+  "keywords": ["security", "cve", "osv", "vulnerability", "sca", "dependency-scanning"],
+  "privacy_policies": [
+    "https://github.com/shane-js/ghostfree/blob/main/README.md#privacy-policy"
+  ],
+  "server": {
+    "type": "node",
+    "entry_point": "dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/dist/index.js",
+        "--repo-path",
+        "${user_config.repo_path}"
+      ],
+      "env": {
+        "NVD_API_KEY": "${user_config.nvd_api_key}",
+        "GHOSTFREE_MIN_SEVERITY": "${user_config.min_severity}",
+        "GHOSTFREE_ACCEPTED_PATH": "${user_config.accepted_path}"
+      }
+    }
+  },
+  "tools": [
+    { "name": "discover_dependencies", "description": "Scan repo manifests, return all pinned packages by ecosystem" },
+    { "name": "check_cves", "description": "Query OSV.dev for CVEs, filter by severity, apply accepted risks" },
+    { "name": "enrich_cve", "description": "Fetch CVSS, CWE, references from NVD + KEV exploitation status" },
+    { "name": "list_accepted_risks", "description": "List all accepted risks with expiry status and severity snapshot" },
+    { "name": "accept_risk", "description": "Record an accepted risk with reason, expiry date, and severity snapshot" },
+    { "name": "remove_accepted_risk", "description": "Remove an accepted risk by UUID" }
+  ],
+  "prompts": [
+    {
+      "name": "scan",
+      "description": "Run a full GhostFree security scan: discover dependencies, check for CVEs, triage findings, and manage accepted risks."
+    }
+  ],
+  "user_config": {
+    "repo_path": {
+      "type": "directory",
+      "title": "Repository Path",
+      "description": "Path to the repository to scan for vulnerabilities.",
+      "required": true,
+      "default": "${HOME}"
+    },
+    "nvd_api_key": {
+      "type": "string",
+      "title": "NVD API Key (optional)",
+      "description": "Optional NVD API key for higher rate limits (50 req/30s vs 5 req/30s). Get one at https://nvd.nist.gov/developers/request-an-api-key",
+      "sensitive": true,
+      "required": false
+    },
+    "min_severity": {
+      "type": "string",
+      "title": "Minimum Severity (optional)",
+      "description": "Default CVE severity threshold to surface: CRITICAL, HIGH, MEDIUM, or LOW. Defaults to MEDIUM if not set.",
+      "required": false
+    },
+    "accepted_path": {
+      "type": "file",
+      "title": "Accepted Risks File Path (optional)",
+      "description": "Custom path for the accepted.yml file. Defaults to .ghostfree/accepted.yml in the repository root.",
+      "required": false
+    }
+  },
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  }
+}

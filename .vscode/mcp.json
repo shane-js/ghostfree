@@ -1,0 +1,10 @@
+{
+  "servers": {
+    "ghostfree": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "ghostfree", "--repo-path", "${workspaceFolder}"],
+      "env": {}
+    }
+  }
+}

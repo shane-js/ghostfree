@@ -1,0 +1,64 @@
+<project>
+  <dependencies>
+    <!-- vrc-exact -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>6.0.11</version>
+    </dependency>
+    <!-- vrc-property-placeholder -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <!-- vrc-exact -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+    </dependency>
+    <!-- vrc-exact + vrc-prerelease -->
+    <dependency>
+      <groupId>com.example</groupId>
+      <artifactId>snapshot-lib</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <!-- vrc-exact + vrc-prerelease -->
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>32.1.2-jre</version>
+    </dependency>
+    <!-- vrc-inclusive-range -->
+    <dependency>
+      <groupId>com.example</groupId>
+      <artifactId>interval-lib</artifactId>
+      <version>[1.0,2.0)</version>
+    </dependency>
+    <!-- vrc-inclusive-range -->
+    <dependency>
+      <groupId>com.example</groupId>
+      <artifactId>interval-inclusive</artifactId>
+      <version>[1.5,2.5]</version>
+    </dependency>
+    <!-- vrc-exclusive-range -->
+    <dependency>
+      <groupId>com.example</groupId>
+      <artifactId>exclusive-lower</artifactId>
+      <version>(4.1.3,)</version>
+    </dependency>
+    <!-- vrc-upper-bound-only -->
+    <dependency>
+      <groupId>com.example</groupId>
+      <artifactId>upper-only</artifactId>
+      <version>[,1.0]</version>
+    </dependency>
+    <!-- vrc-exclusive-range -->
+    <dependency>
+      <groupId>com.example</groupId>
+      <artifactId>exclusive-both</artifactId>
+      <version>(1.0,2.0)</version>
+    </dependency>
+  </dependencies>
+</project>

@@ -1,0 +1,9 @@
+{
+  "default": {
+    "requests": { "version": "==2.28.2", "hashes": ["sha256:abc123"] },
+    "certifi": { "version": "==2023.7.22" }
+  },
+  "develop": {
+    "pytest": { "version": "==7.4.0" }
+  }
+}

@@ -1,0 +1,24 @@
+requests==2.28.2
+# This is a comment
+flask>=2.3.0
+    
+-r base-requirements.txt
+numpy~=1.24.0
+boto3==1.26.0  # inline comment
+unpinned-package
+# vrc-exact (arbitrary equality)
+custom-pkg===1.0.0
+# vrc-exclusive-minimum
+min-pkg>2.0
+# vrc-exact + vrc-prerelease
+pre-pkg==1.0.0-beta
+# vrc-upper-bound-only
+upper-le<=3.0
+# vrc-upper-bound-only
+upper-lt<3.0
+# vrc-exclusion
+exclude-pkg!=2.0
+# vrc-compound
+compound>=2.0,<3.0
+# Extras with version
+requests[security]==2.28.0

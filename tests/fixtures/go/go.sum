@@ -1,0 +1,12 @@
+github.com/gin-gonic/gin v1.9.1 h1:4idEAncQnU5cB7BeOkPtxjfCSye0AAm1R0RVIqJ+Jmg=
+github.com/gin-gonic/gin v1.9.1/go.mod h1:hPrL7YrpYKXt5YId3A/Tnip5kqbEAP+KLuI3SUcPTeU=
+github.com/stretchr/testify v1.8.4 h1:CcVxWJq4QePU9MNtHpqwpqN1ex6DkJFDkGHMHu9Nvkc=
+github.com/stretchr/testify v1.8.4/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
+golang.org/x/net v0.14.0 h1:BONx9s002vGdD9umnlX1Po8vOZmrgH34qlHcD1MfK14=
+golang.org/x/net v0.14.0/go.mod h1:zAkwMx4wYwar1NccMg/+fX4bS96DF/frmgmy484f//sI=
+golang.org/x/text v0.12.0 h1:k+n5B8goJNdU7hSvEtMUz3d1Q6D/XW4COJSJR6fN0mc=
+golang.org/x/text v0.12.0/go.mod h1:TvPlkZtksWOMsz7fbANvkp4WM8x/WCo/om8BMLbz+aE=
+github.com/davecgh/go-spew v1.1.1 h1:vj9j/general515PkbuPQ9nblXtav0BTmulzwAPoAj11s=
+github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YJui4Ru53CnCnm9vOEXB7L72GSfSAO9M5y35gjU=
+github.com/example/prerelease v1.0.0-rc.1 h1:abc123prerelease=
+github.com/example/prerelease v1.0.0-rc.1/go.mod h1:def456prerelease=

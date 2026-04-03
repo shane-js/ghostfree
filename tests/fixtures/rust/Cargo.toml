@@ -1,0 +1,26 @@
+[package]
+name = "myapp"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde = "1.0.188"
+tokio = { version = "1.32.0", features = ["full"] }
+reqwest = { version = "0.11.20", default-features = false }
+rand = { workspace = true }
+# vrc-caret
+serde_json = "^1.0.100"
+# vrc-tilde
+log = "~0.4.0"
+# vrc-compound
+bytes = ">=1.0, <2.0"
+# vrc-exclusive-minimum
+http = ">0.2"
+# vrc-exact (explicit =)
+pin-project = "=1.1.0"
+# vrc-wildcard
+any-dep = "*"
+# vrc-upper-bound-only
+upper-dep = "<2.0"
+# vrc-exact + vrc-prerelease
+beta-dep = "0.5.0-beta.1"

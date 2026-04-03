@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "ghostfree": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "ghostfree", "--repo-path", "."]
+    }
+  }
+}
