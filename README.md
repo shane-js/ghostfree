@@ -11,7 +11,11 @@ GhostFree is a local MCP server that scans your repository's dependencies for kn
 
 No installation, signup, or payment required. Add GhostFree to your MCP settings for whatever code tool you use and run `/ghostfree.scan`.
 
-### VS Code Copilot
+### VS Code Copilot (Extension — easiest)
+
+Search `@mcp ghostfree` in the Extensions view (`Ctrl+Shift+X`) and click **Install**. Then open the Command Palette (`Ctrl+Shift+P`), run **MCP: List Servers**, select **GhostFree**, choose **Start Server**, and confirm trust when prompted. No JSON config needed.
+
+### VS Code Copilot (Manual config)
 
 Create or update `.vscode/mcp.json` in your project root:
 
@@ -423,7 +427,7 @@ For questions, open an issue on GitHub.
 
 ## Acknowledgements
 
-GhostFree is built entirely on the shoulders of three organizations that have made their vulnerability intelligence freely available to the world. Without them, this tool would not exist.
+GhostFree is built entirely on the shoulders of three organizations that have made their vulnerability intelligence freely available to the world and all the vulnerability researchers around the world that report CVEs. Without them, this tool would not exist.
 
 **Google Open Source Security Team — Open Source Vulnerabilities (OSV)**  
 OSV.dev is the backbone of every GhostFree scan. It provides a free, open API for querying known vulnerabilities across all major package ecosystems by package name and version, and includes severity scores and fix version data in a single response. Its generous rate limits and zero-auth design make it ideal for a tool that runs locally on every developer's machine.

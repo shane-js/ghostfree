@@ -1,5 +1,6 @@
 # Build output
 dist/
+vscode-extension/out/
 
 # Dependencies
 node_modules/
