@@ -8,11 +8,14 @@ const DEFAULT_DIR = ".ghostfree";
 const DEFAULT_FILENAME = "accepted.yml";
 const MAX_EXPIRY_YEARS = 1;
 
-/** Resolve the path to accepted.yml using the priority chain */
+/** Resolve the .ghostfree directory, honoring GHOSTFREE_DIR if set */
+function resolveGhostfreeDir(repoPath: string): string {
+  return process.env["GHOSTFREE_DIR"] ?? path.join(repoPath, DEFAULT_DIR);
+}
+
+/** Resolve the path to accepted.yml */
 export function resolveAcceptedPath(repoPath: string): string {
-  const envPath = process.env["GHOSTFREE_ACCEPTED_PATH"];
-  if (envPath) return path.resolve(envPath);
-  return path.join(repoPath, DEFAULT_DIR, DEFAULT_FILENAME);
+  return path.join(resolveGhostfreeDir(repoPath), DEFAULT_FILENAME);
 }
 
 /** Load accepted risks from YAML. Returns [] if file doesn't exist. */
@@ -42,12 +45,12 @@ export async function saveAcceptedRisks(
   const content = yaml.dump({ accepted_risks: risks }, { indent: 2, lineWidth: 120 });
   await fs.writeFile(filePath, content, "utf8");
 
-  if (isFirstCreation && !process.env["GHOSTFREE_ACCEPTED_PATH"]) {
+  if (isFirstCreation && !process.env["GHOSTFREE_DIR"]) {
     return {
       message:
         `Created ${path.relative(repoPath, filePath)} in your repo root. ` +
         `Commit this file to share accepted risks with your team. ` +
-        `Set the GHOSTFREE_ACCEPTED_PATH env var to customize the location.`,
+        `Set the GHOSTFREE_DIR env var to use a custom directory.`,
     };
   }
   return {};

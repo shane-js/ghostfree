@@ -10,6 +10,8 @@ This extension registers GhostFree as an MCP server in VS Code, making it availa
 
 GhostFree scans your repository's dependencies for known vulnerabilities based on issued CVEs using [OSV.dev](https://osv.dev), helps you triage and fix findings with NVD and CISA KEV enrichment, and lets you manage accepted risks — all directly from your AI coding assistant.
 
+> **For the full documentation**, including CLI usage, architecture details, and contributing guidelines, see the [main repository README](https://github.com/shane-js/ghostfree#readme).
+
 ## Quick Start
 
 1. Install this extension
@@ -25,7 +27,7 @@ No signup, no API key, no configuration needed.
 Type `/ghostfree.scan` in GitHub Copilot Chat to kick off the full workflow:
 
 1. **Discover** — finds all manifest files (`requirements.txt`, `package.json`, `go.mod`, `Cargo.toml`, `pom.xml`, `*.csproj`, etc.)
-2. **Threshold** — asks for a minimum severity level (`CRITICAL` / `HIGH` / `MEDIUM` / `LOW`)
+2. **Threshold** — determines minimum severity level from `GHOSTFREE_MIN_SEVERITY` env var, `.ghostfree/config.yml`, or by prompting you (`CRITICAL` / `HIGH` / `MEDIUM` / `LOW`)
 3. **Scan** — queries OSV.dev for CVEs across all discovered packages
 4. **Triage** — presents numbered results, 10 at a time
 5. **Enrich** — fetches CVSS vectors, CWE classification, and CISA KEV "actively exploited" status
@@ -38,8 +40,7 @@ User: /ghostfree.scan
 
 GhostFree: Discovering dependencies...
 Found 84 packages across 2 ecosystems (npm, PyPI).
-
-What minimum severity should I surface? (CRITICAL / HIGH / MEDIUM / LOW)
+Severity threshold: HIGH (source: environment variable (GHOSTFREE_MIN_SEVERITY))
 
 User: HIGH
 
@@ -90,15 +91,31 @@ When you accept a risk, GhostFree writes it to `.ghostfree/accepted.yml` in your
 
 Lock files (`package-lock.json`, `Cargo.lock`, `go.sum`, `Pipfile.lock`) are used when present, giving full transitive dependency coverage.
 
-## Environment Variables
+## Environment Variables & Configuration
 
-Set these in your shell or in the VS Code MCP server `env` config:
+**For VS Code:** Create a `.env` file in your workspace root. The GhostFree server reads it automatically at startup. As always `.env` to your `.gitignore` to keep API keys local.
+
+```ini
+# .env (workspace-local, not committed)
+NVD_API_KEY=your-key-here
+GHOSTFREE_MIN_SEVERITY=HIGH
+```
+
+**For all MCP clients:** If you can't use `.env` (e.g., using manual `mcp.json` or `claude_desktop_config.json`), set these as standard environment variables or in your client's `"env"` config block:
 
 | Variable | Description |
 |----------|-------------|
-| `GHOSTFREE_MIN_SEVERITY` | Default severity threshold: `CRITICAL`, `HIGH`, `MEDIUM`, or `LOW` |
-| `GHOSTFREE_ACCEPTED_PATH` | Custom path for `accepted.yml` |
 | `NVD_API_KEY` | Optional — raises NVD rate limit from 5 to 50 req/30s |
+| `GHOSTFREE_MIN_SEVERITY` | Optional — override severity threshold. Resolution order: tool argument → env var → config file → prompt user |
+| `GHOSTFREE_DIR` | Optional — use a custom directory instead of `.ghostfree/` (applies to both `accepted.yml` and `config.yml`) |
+
+**Team defaults:** For a repo-scoped setting that you can commit and share, create `.ghostfree/config.yml`:
+
+```yaml
+min_severity: HIGH
+```
+
+This is only used if no explicit tool argument or env var is provided — env vars take precedence.
 
 ## Privacy
 

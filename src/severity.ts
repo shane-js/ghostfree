@@ -8,10 +8,9 @@ export function parseSeverity(raw: string | undefined): Severity {
   return "UNKNOWN";
 }
 
-/** Return the minimum severity to surface, reading from env if not provided */
+/** Return the minimum severity to surface. Falls back to MEDIUM if override is absent or unrecognized. */
 export function resolveMinSeverity(override?: string): Severity {
-  const raw = override ?? process.env["GHOSTFREE_MIN_SEVERITY"];
-  return parseSeverity(raw) === "UNKNOWN" ? "MEDIUM" : parseSeverity(raw);
+  return parseSeverity(override) === "UNKNOWN" ? "MEDIUM" : parseSeverity(override);
 }
 
 /** True if `a` is at or above `threshold` in severity */

@@ -22,21 +22,8 @@ describe("resolveMinSeverity", () => {
     expect(resolveMinSeverity("HIGH")).toBe("HIGH");
   });
 
-  it("returns MEDIUM when no override and no env var", () => {
-    delete process.env["GHOSTFREE_MIN_SEVERITY"];
+  it("returns MEDIUM when no override", () => {
     expect(resolveMinSeverity()).toBe("MEDIUM");
-  });
-
-  it("reads GHOSTFREE_MIN_SEVERITY env var", () => {
-    process.env["GHOSTFREE_MIN_SEVERITY"] = "CRITICAL";
-    expect(resolveMinSeverity()).toBe("CRITICAL");
-    delete process.env["GHOSTFREE_MIN_SEVERITY"];
-  });
-
-  it("falls back to MEDIUM when env var is invalid", () => {
-    process.env["GHOSTFREE_MIN_SEVERITY"] = "INVALID";
-    expect(resolveMinSeverity()).toBe("MEDIUM");
-    delete process.env["GHOSTFREE_MIN_SEVERITY"];
   });
 });
 

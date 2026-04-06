@@ -1,6 +1,7 @@
 {
   "name": "ghostfree",
-  "version": "0.1.1",
+  "version": "0.2.0",
+  "mcpName": "io.github.shane-js/ghostfree",
   "description": "MCP server that scans your repo's dependencies for security vulnerabilities based on published CVEs.",
   "type": "module",
   "bin": {

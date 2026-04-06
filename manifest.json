@@ -35,7 +35,7 @@
       "env": {
         "NVD_API_KEY": "${user_config.nvd_api_key}",
         "GHOSTFREE_MIN_SEVERITY": "${user_config.min_severity}",
-        "GHOSTFREE_ACCEPTED_PATH": "${user_config.accepted_path}"
+        "GHOSTFREE_DIR": "${user_config.ghostfree_dir}"
       }
     }
   },
@@ -74,10 +74,10 @@
       "description": "Default CVE severity threshold to surface: CRITICAL, HIGH, MEDIUM, or LOW. Defaults to MEDIUM if not set.",
       "required": false
     },
-    "accepted_path": {
-      "type": "file",
-      "title": "Accepted Risks File Path (optional)",
-      "description": "Custom path for the accepted.yml file. Defaults to .ghostfree/accepted.yml in the repository root.",
+    "ghostfree_dir": {
+      "type": "directory",
+      "title": "GhostFree Directory (optional)",
+      "description": "Custom directory for GhostFree files (config.yml and accepted.yml). Defaults to .ghostfree/ in the repository root.",
       "required": false
     }
   },

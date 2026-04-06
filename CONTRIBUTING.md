@@ -55,8 +55,9 @@ ghostfree/
 │       └── scan.ts               # MCP prompt: /ghostfree.scan
 ├── tests/
 │   ├── fixtures/                 # Manifest samples for parser unit tests
-│   ├── parsers/                  # Parser unit tests (one file per ecosystem)
+│   ├── parsers/                  # Parser unit tests (one per ecosystem + parsers.test.ts for the orchestrator)
 │   ├── api/                      # API client unit tests (mocked fetch)
+│   ├── tools/                    # MCP tool unit tests (one file per tool)
 │   ├── accepted-risks.test.ts    # Accepted risk CRUD unit tests
 │   ├── dep-cache.test.ts         # Dep cache unit tests
 │   ├── severity.test.ts          # Severity helper unit tests
@@ -242,7 +243,17 @@ Rules enforced server-side:
 - Expiry > 1 year: returns a warning and requires `confirm_extended_expiry=true` on retry
 - Expired acceptances are never auto-removed — they resurface as `⚠️` warnings on every scan
 
-File location priority: `GHOSTFREE_ACCEPTED_PATH` env → `.ghostfree/accepted.yml` in repo root.
+File location: `.ghostfree/accepted.yml` in repo root. Set `GHOSTFREE_DIR` to use a different directory (also moves `config.yml`).
+
+---
+
+## Environment Variables
+
+| Variable | Read by | Description |
+|----------|---------|-------------|
+| `NVD_API_KEY` | `src/api/nvd.ts` | Raises NVD rate limit from 5 to 50 req/30s |
+| `GHOSTFREE_MIN_SEVERITY` | `src/tools/check-cves.ts` | Severity threshold override — takes precedence over `config.yml` |
+| `GHOSTFREE_DIR` | `src/accepted-risks.ts`, `src/config.ts` | Custom directory for `accepted.yml` and `config.yml` (default: `.ghostfree/`) |
 
 ---
 
@@ -254,6 +265,12 @@ npm run build
 ```
 
 Uses `tsup` (not plain `tsc`) to bundle all of `src/` into a single `dist/index.js`. This matters because Node's ESM runtime does not support directory imports (`./python` → `./python/index.js`), which would require every import to carry an explicit `.js` extension. `tsup` resolves this at bundle time — the output is one portable file with no resolution issues, a smaller cold-start footprint for `npx` users, and `moduleResolution: "bundler"` in `tsconfig.json` remains accurate.
+
+### Test file naming conventions
+
+- **Name the test file after the source file it tests**, not after a function within that file. For example, `src/parsers/index.ts` → `tests/parsers/parsers.test.ts`, `src/tools/check-cves.ts` → `tests/tools/check-cves.test.ts`.
+- **Nest describe blocks** so the outermost `describe` names the module/file (e.g. `"parsers/index"` or `"check_cves tool"`) and inner `describe` blocks name the function or behaviour under test.
+- If a test file deviates from this convention (e.g. tests for a function exported by a shared module), add a comment at the top of the file explaining why.
 
 ### Unit tests (no network)
 ```bash

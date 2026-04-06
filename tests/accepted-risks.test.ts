@@ -14,19 +14,19 @@ let tmpDir: string;
 
 beforeEach(async () => {
   tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "ghostfree-test-"));
-  delete process.env["GHOSTFREE_ACCEPTED_PATH"];
+  delete process.env["GHOSTFREE_DIR"];
 });
 
 afterEach(async () => {
   await fs.rm(tmpDir, { recursive: true, force: true });
-  delete process.env["GHOSTFREE_ACCEPTED_PATH"];
+  delete process.env["GHOSTFREE_DIR"];
 });
 
 describe("resolveAcceptedPath", () => {
-  it("uses GHOSTFREE_ACCEPTED_PATH env var when set", () => {
-    const customPath = path.join(tmpDir, "custom", "accepted.yml");
-    process.env["GHOSTFREE_ACCEPTED_PATH"] = customPath;
-    expect(resolveAcceptedPath(tmpDir)).toBe(customPath);
+  it("uses GHOSTFREE_DIR env var when set", () => {
+    const customDir = path.join(tmpDir, "custom");
+    process.env["GHOSTFREE_DIR"] = customDir;
+    expect(resolveAcceptedPath(tmpDir)).toBe(path.join(customDir, "accepted.yml"));
   });
 
   it("defaults to .ghostfree/accepted.yml in repo root", () => {

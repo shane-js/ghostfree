@@ -1,11 +1,8 @@
 import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
-	const didChangeEmitter = new vscode.EventEmitter<void>();
-
 	context.subscriptions.push(
 		vscode.lm.registerMcpServerDefinitionProvider('ghostfree', {
-			onDidChangeMcpServerDefinitions: didChangeEmitter.event,
 			provideMcpServerDefinitions: async () => {
 				const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
 				if (!workspaceFolder) {
@@ -13,7 +10,7 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 				return [
 					new vscode.McpStdioServerDefinition(
-						'GhostFree',
+						'ghostfree',
 						'npx',
 						['-y', 'ghostfree', '--repo-path', workspaceFolder]
 					)

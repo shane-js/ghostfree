@@ -18,9 +18,11 @@ function resolveRepoPath(): string {
   return process.cwd();
 }
 
+import fs from "node:fs";
+
 const repoPath = resolveRepoPath();
 
-// Load .env from the repo root if present — does not override already-set env vars
+// Load .env from the repo root if present
 const dotEnvPath = path.join(repoPath, ".env");
 try {
   process.loadEnvFile(dotEnvPath);

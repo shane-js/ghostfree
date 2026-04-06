@@ -14,7 +14,8 @@ afterEach(async () => {
   await fs.rm(tmpDir, { recursive: true, force: true });
 });
 
-describe("discoverDependencies", () => {
+describe("parsers/index", () => {
+  describe("discoverDependencies", () => {
   it("returns empty array for an empty directory", async () => {
     const deps = await discoverDependencies(tmpDir);
     expect(deps).toHaveLength(0);
@@ -94,5 +95,6 @@ describe("discoverDependencies", () => {
     expect(ecosystems.has("PyPI")).toBe(true);
     expect(ecosystems.has("npm")).toBe(true);
     expect(ecosystems.has("Go")).toBe(true);
+  });
   });
 });

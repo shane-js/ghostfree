@@ -3,8 +3,47 @@ import { z } from "zod";
 import { queryOsv } from "../api/osv.js";
 import { listAcceptedRisks } from "../accepted-risks.js";
 import { resolveMinSeverity, meetsThreshold, sortBySeverity } from "../severity.js";
+import { readConfig } from "../config.js";
 import { getCachedDeps } from "../dep-cache.js";
 import type { Dependency, Vulnerability, Severity } from "../types.js";
+import type { GhostFreeConfig } from "../config.js";
+
+type ValidSeverity = "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
+
+/**
+ * Resolves min_severity through the pre-elicit chain:
+ *   tool arg → env var → config file
+ *
+ * Returns undefined if none of the sources provided a value, signalling
+ * that the caller should fall through to MCP elicitation.
+ *
+ * Dependencies are injected so this function can be unit-tested without
+ * a real MCP server, file system, or process.env.
+ */
+export async function resolvePreElicitSeverity(
+  toolArg: string | undefined,
+  getEnv: (key: string) => string | undefined,
+  readConfigFn: () => Promise<GhostFreeConfig>
+): Promise<{ severity: ValidSeverity | undefined; source: string }> {
+  // 1. Explicit tool argument — highest priority
+  if (toolArg) {
+    return { severity: toolArg as ValidSeverity, source: "tool argument" };
+  }
+
+  // 2. Environment variable — overrides per-repo defaults (CI/CD, local .env)
+  const envVal = getEnv("GHOSTFREE_MIN_SEVERITY");
+  if (envVal) {
+    return { severity: envVal as ValidSeverity, source: "environment variable (GHOSTFREE_MIN_SEVERITY)" };
+  }
+
+  // 3. Config file — team default committed to source control
+  const config = await readConfigFn();
+  if (config.min_severity && config.min_severity !== "UNKNOWN") {
+    return { severity: config.min_severity as ValidSeverity, source: "config file (.ghostfree/config.yml)" };
+  }
+
+  return { severity: undefined, source: "" };
+}
 
 const PackageSchema = z.object({
   name: z.string(),
@@ -29,16 +68,19 @@ export function registerCheckCvesTool(server: McpServer, repoPath: string): void
           .enum(["CRITICAL", "HIGH", "MEDIUM", "LOW"])
           .optional()
           .describe(
-            "Minimum severity to surface in detail. Defaults to GHOSTFREE_MIN_SEVERITY env var, or MEDIUM."
+            "Minimum severity to surface in detail: CRITICAL, HIGH, MEDIUM, or LOW. If omitted, GhostFree will determine the threshold automatically."
           ),
       },
       annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     },
     async ({ packages, min_severity }) => {
-      // If min_severity wasn't supplied by the model and the env var isn't set,
-      // use MCP elicitation to ask the user via the client's native UI.
-      let resolvedMinSeverity = min_severity;
-      if (!resolvedMinSeverity && !process.env["GHOSTFREE_MIN_SEVERITY"]) {
+      // Resolution order: tool arg → config file → env var → elicit (prompt) and save to config
+      let { severity: resolvedMinSeverity, source: severitySource } = await resolvePreElicitSeverity(
+        min_severity,
+        (key) => process.env[key],
+        () => readConfig(repoPath)
+      );
+      if (!resolvedMinSeverity) {
         try {
           const result = await server.server.elicitInput({
             message: "What minimum severity level should I surface CVEs at?",
@@ -58,6 +100,7 @@ export function registerCheckCvesTool(server: McpServer, repoPath: string): void
           });
           if (result.action === "accept" && result.content?.["severity"]) {
             resolvedMinSeverity = result.content["severity"] as "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
+            severitySource = "user selection";
           }
         } catch {
           // Client doesn't support elicitation — fall through to env/default resolution (i.e. chat)
@@ -120,7 +163,7 @@ export function registerCheckCvesTool(server: McpServer, repoPath: string): void
       lines.push(`## CVE Scan Results (threshold: ${threshold})\n`);
       lines.push(`Packages scanned: ${deps.length}`);
       lines.push(`Total vulnerabilities found: ${vulns.length}`);
-      lines.push(`Severity threshold: ${threshold}\n`);
+      lines.push(`Severity threshold: ${threshold} (source: ${severitySource})\n`);
 
       if (actionable.length === 0) {
         lines.push("✅ No actionable CVEs found above the severity threshold.\n");

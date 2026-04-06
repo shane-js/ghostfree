@@ -7,11 +7,7 @@ You are running a GhostFree security scan. Follow these steps in order:
 In large font size display "🚫👻 GhostFree scan starting..." and then immediately call the \`discover_dependencies\` tool. It will return all pinned packages found in manifest files across the repository.
 
 **Step 2 — Check for CVEs**
-Check whether the GHOSTFREE_MIN_SEVERITY environment variable is set on the server.
-- If it IS set, inform the user: "✅ Using severity threshold defined in env variable (\`GHOSTFREE_MIN_SEVERITY\`): <VALUE>" then call \`check_cves\` passing that value as \`min_severity\`.
-- If it is NOT set, call \`check_cves\` **without** a \`min_severity\` argument — the tool will present a native severity picker to the user automatically. Do NOT ask the user via chat first.
-
-In either case, do NOT pass the packages array — the server automatically uses the dependencies discovered in Step 1.
+Call \`check_cves\` **without** a \`min_severity\` argument and **without** a \`packages\` argument. The tool will determine the severity threshold automatically using internal logic and will confirm the source it used to determine it in its response.
 
 **Step 3 — Present results (paginated)**
 The tool will return a numbered list of actionable CVEs. Present the first 10 to the user in this format:

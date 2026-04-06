@@ -223,7 +223,7 @@ All read-only tools are safe to auto-approve in your MCP client. Write tools (`a
 | Parameter | Required | Description |
 |-----------|----------|-------------|
 | `packages` | Yes | Array of `{name, version, ecosystem}` — use `discover_dependencies` output |
-| `min_severity` | No | `CRITICAL`, `HIGH`, `MEDIUM`, or `LOW`. Defaults to `GHOSTFREE_MIN_SEVERITY` env var, then `MEDIUM` |
+| `min_severity` | No | `CRITICAL`, `HIGH`, `MEDIUM`, or `LOW`. If not passed in, resolves in order of: `GHOSTFREE_MIN_SEVERITY` env var, then `.ghostfree/config.yml`, then prompts to choose |
 
 ### `accept_risk` Inputs
 
@@ -238,15 +238,25 @@ All read-only tools are safe to auto-approve in your MCP client. Write tools (`a
 
 ---
 
+## Configuration
+
+Create `.ghostfree/config.yml` in your repo root to set a persistent severity threshold that's shared with your team via source control:
+
+```yaml
+min_severity: HIGH
+```
+
+This takes priority over the environment variable. If neither is set, GhostFree will prompt you to choose at scan time.
+
 ## Environment Variables
 
 | Variable | Description |
 |----------|-------------|
-| `GHOSTFREE_MIN_SEVERITY` | Default severity threshold: `CRITICAL`, `HIGH`, `MEDIUM`, or `LOW` |
-| `GHOSTFREE_ACCEPTED_PATH` | Custom path for `accepted.yml` (e.g., `./security/accepted.yml`) |
 | `NVD_API_KEY` | Optional NVD API key for higher rate limits (50 req/30s vs 5 req/30s) |
+| `GHOSTFREE_MIN_SEVERITY` | Optional — skip the severity prompt and always use this threshold (`CRITICAL`, `HIGH`, `MEDIUM`, or `LOW`) |
+| `GHOSTFREE_DIR` | Optional — use a custom directory instead of `.ghostfree/` (applies to both `accepted.yml` and `config.yml`) |
 
-Add these to the `"env"` section of your MCP client config, or set them in your shell environment.
+**VS Code extension users:** create a `.env` file in your workspace root — the extension reads it automatically and forwards the values to the server. For all other setups (manual MCP JSON config): add these to the `"env"` block in your client's config file (`.vscode/mcp.json`, `.mcp.json`, `.cursor/mcp.json`, `claude_desktop_config.json`, etc.), or export them as system environment variables.
 
 ---
 
@@ -270,8 +280,6 @@ Rules:
 - Expiry within 1 year: accepted immediately
 - Expiry beyond 1 year: requires `confirm_extended_expiry=true`
 - Expired acceptances are **never silently dropped** — they resurface as warnings on every scan
-
-To use a custom path (e.g., a shared `security/` directory), set `GHOSTFREE_ACCEPTED_PATH=./security/accepted.yml`.
 
 ---
 
