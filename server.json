@@ -1,0 +1,70 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.shane-js/ghostfree",
+  "title": "GhostFree",
+  "description": "MCP server that scans your repo's dependencies for security vulnerabilities based on published CVEs.",
+  "websiteUrl": "https://github.com/shane-js/ghostfree#readme",
+  "repository": {
+    "url": "https://github.com/shane-js/ghostfree",
+    "source": "github"
+  },
+  "version": "0.2.0",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/shane-js/ghostfree/main/icon.png",
+      "mimeType": "image/png",
+      "sizes": ["512x512"]
+    }
+  ],
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "ghostfree",
+      "version": "0.2.0",
+      "runtimeHint": "npx",
+      "runtimeArguments": [
+        {
+          "type": "positional",
+          "value": "-y"
+        }
+      ],
+      "packageArguments": [
+        {
+          "type": "named",
+          "name": "--repo-path",
+          "description": "Absolute path to the repository to scan for vulnerable dependencies.",
+          "isRequired": true,
+          "format": "filepath"
+        }
+      ],
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "GHOSTFREE_DIR",
+          "description": "Override the directory where GhostFree stores its data files (accepted-risks.yml, config.yml). Defaults to .ghostfree/ in the scanned repository root.",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "filepath"
+        },
+        {
+          "name": "GHOSTFREE_MIN_SEVERITY",
+          "description": "Minimum CVE severity level to surface. One of: CRITICAL, HIGH, MEDIUM (default), LOW.",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string",
+          "default": "MEDIUM",
+          "choices": ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
+        },
+        {
+          "name": "NVD_API_KEY",
+          "description": "Optional NVD API key for higher rate limits when enriching CVE details. Free to request at https://nvd.nist.gov/developers/request-an-api-key.",
+          "isRequired": false,
+          "isSecret": true,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}

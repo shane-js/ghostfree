@@ -26,3 +26,7 @@ coverage/
 
 # Claude Desktop config is an example — actual path is OS-specific
 claude_desktop_config.json
+
+# mcp-publisher auth tokens (created by 'mcp-publisher login')
+.mcpregistry_github_token
+.mcpregistry_registry_token
